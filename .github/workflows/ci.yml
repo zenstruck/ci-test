@@ -19,15 +19,15 @@ jobs:
 #  sca:
 #    uses: zenstruck/.github/.github/workflows/php-stan.yml@main
 #
-#  fixcs:
+  fixcs:
 #    needs: [tests, code-coverage, composer-validate, sca]
-#    if: ${{ github.event_name == 'push' || github.event_name == 'schedule' }}
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: zenstruck/.github@php-cs-fixer
-#        with:
-#          php: 8
-#          key: ${{ secrets.GPG_PRIVATE_KEY }}
+    if: ${{ github.event_name == 'push' || github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: zenstruck/.github@php-cs-fixer
+        with:
+          php: 8
+          key: ${{ secrets.GPG_PRIVATE_KEY }}
 
   sync-with-template:
     #needs: [ tests, code-coverage, composer-validate, sca ]
@@ -36,5 +36,4 @@ jobs:
     steps:
       - uses: zenstruck/.github@sync-with-template
         with:
-          php: 8
           key: ${{ secrets.GPG_PRIVATE_KEY }}
