@@ -7,24 +7,52 @@ on:
     - cron: '0 0 1,16 * *'
 
 jobs:
-  tests:
-    uses: zenstruck/.github/.github/workflows/php-test.yml@main
+#  tests:
+#    uses: zenstruck/.github/.github/workflows/php-test.yml@main
+#
+#  code-coverage:
+#    uses: zenstruck/.github/.github/workflows/php-coverage-codecov.yml@main
+#
+#  composer-validate:
+#    uses: zenstruck/.github/.github/workflows/php-composer-validate.yml@main
+#
+#  sca:
+#    uses: zenstruck/.github/.github/workflows/php-stan.yml@main
+#
+#  fixcs:
+#    needs: [tests, code-coverage, composer-validate, sca]
+#    if: ${{ github.event_name == 'push' || github.event_name == 'schedule' }}
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: zenstruck/.github@php-cs-fixer
+#        with:
+#          php: 8
+#          key: ${{ secrets.GPG_PRIVATE_KEY }}
 
-  code-coverage:
-    uses: zenstruck/.github/.github/workflows/php-coverage-codecov.yml@main
-
-  composer-validate:
-    uses: zenstruck/.github/.github/workflows/php-composer-validate.yml@main
-
-  sca:
-    uses: zenstruck/.github/.github/workflows/php-stan.yml@main
-
-  fixcs:
-    needs: [tests, code-coverage, composer-validate, sca]
+  sync-with-template:
+    #needs: [ tests, code-coverage, composer-validate, sca ]
     if: ${{ github.event_name == 'push' || github.event_name == 'schedule' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: zenstruck/.github@php-cs-fixer
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Copy LICENSE
+        run: curl https://raw.githubusercontent.com/zenstruck/php-template/main/LICENSE -o LICENSE
+        shell: bash
+
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v5
         with:
-          php: 8
-          key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+
+      - name: Commit files fixed with php-cs-fixer
+        uses: stefanzweifel/git-auto-commit-action@v4.16.0
+        with:
+          branch: "${{ github.head_ref }}"
+          commit_options: '-S'
+          commit_message: "bot: sync with template [skip ci]"
+          commit_user_email: "kevinbond@gmail.com"
+          commit_user_name: "Kevin Bond (bot)"
