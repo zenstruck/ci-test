@@ -7,7 +7,6 @@ $file = __DIR__.'/.php-cs-fixer.temp.php';
     \file_get_contents('https://raw.githubusercontent.com/zenstruck/.github/main/.php-cs-fixer.dist.php')
 );
 
-
 try {
     return require $file;
 } finally {
