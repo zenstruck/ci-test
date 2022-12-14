@@ -20,8 +20,12 @@ jobs:
     uses: zenstruck/.github/.github/workflows/php-stan.yml@main
 
   fixcs:
+    name: Run php-cs-fixer and commit any fixes
     needs: [tests, code-coverage, composer-validate, sca]
-    uses: zenstruck/.github/.github/workflows/php-cs-fixer.yml@main
-    with:
-      php: 8
-      gpg_private_key: "${{ secrets.GPG_PRIVATE_KEY }}"
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' || github.event_name == 'schedule' }}
+    steps:
+      - uses: zenstruck/.github@php-cs-fixer
+        with:
+          php: 8
+          key: ${{ secrets.GPG_PRIVATE_KEY }}
