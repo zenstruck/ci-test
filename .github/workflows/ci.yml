@@ -38,8 +38,16 @@ jobs:
       - name: Check CS
         run: php-cs-fixer fix --diff --verbose
 
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+
       - name: Commit files fixed with php-cs-fixer
         uses: stefanzweifel/git-auto-commit-action@v4.16.0
         with:
           branch: "${{ github.head_ref }}"
+          commit_options: '-S'
           commit_message: "bot: fix cs [skip ci]"
