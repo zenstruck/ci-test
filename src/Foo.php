@@ -16,6 +16,5 @@ namespace Zenstruck;
  */
 final class Foo
 {
-
     public string $foo;
 }
