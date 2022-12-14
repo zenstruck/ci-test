@@ -16,5 +16,4 @@ namespace Zenstruck;
  */
 final class Foo
 {
-
 }
