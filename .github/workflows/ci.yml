@@ -39,4 +39,3 @@ jobs:
       - uses: zenstruck/.github@sync-with-template
         with:
           key: ${{ secrets.GPG_PRIVATE_KEY }}
-          license: false
