@@ -29,6 +29,7 @@ jobs:
         with:
           php: 8
           key: ${{ secrets.GPG_PRIVATE_KEY }}
+          token: ${{ secrets.COMPOSER_TOKEN }}
 
   sync-with-template:
     name: Sync meta files
